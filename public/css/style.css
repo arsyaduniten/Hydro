@@ -1,0 +1,69 @@
+div.water-bottle {
+	float: left;
+	margin-right: 15px;
+}
+.bottle {
+	background: #ddd;
+	width: 100px;
+	border-radius: 30px 30px 6px 6px;
+	height: 200px;
+	padding: 6px;
+	box-shadow: 3px 3px 3px #efefef;
+	margin-bottom: 4px;
+}
+.bottle:hover {
+	background: #eee;
+	box-shadow: 2px 2px 2px #efefef;
+}
+.cap {
+	background: #ddd;
+	margin: 0 25px;
+	width: 60px;
+	border-radius: 8px 8px 10px 12px;
+	height: 35px;
+	border-top: 1px solid #ddd;
+	border-bottom: 2px dotted #efefef;
+}
+.cap-top {
+	background: #ededed;
+	height: 6px;
+	border-radius: 10px 10px 0 0;
+}
+.cap-seal {
+	margin-top: 20px;
+	background: #ccc;
+	height: 6px;
+	border-radius: 0 0 10px 10px;
+}
+.water-full {
+	background: lightblue;
+	width: 100px;
+	margin-top: 10px;
+	height: 190px;
+	z-index: 1;
+	border-radius: 28px 28px 10px 10px;
+}
+.water-medium {
+	background: lightblue;
+	width: 100px;
+	height: 120px;
+	margin-top: 80px;
+	z-index: 1;
+	border-radius: 28px 28px 10px 10px;
+}
+.water-low {
+	background: lightblue;
+	width: 100px;
+	height: 75px;
+	margin-top: 125px;
+	z-index: 1;
+	border-radius: 28px 28px 10px 10px;
+}
+.water-empty {
+	background: lightblue;
+	width: 100px;
+	height: 15px;
+	margin-top: 185px;
+	z-index: 1;
+	border-radius: 28px 28px 10px 10px;
+}

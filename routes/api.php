@@ -20,3 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get("/level/{gate}", function (Gates $gate) {
     return $gate->water_level;
 });
+
+Route::get("/info/{gate}", function (Gates $gate) {
+    return $gate;
+});

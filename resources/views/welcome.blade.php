@@ -17,11 +17,6 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     </head>
     <body>
-
-        <div id="components-demo">
-{{--             <modal-popup gate="1" :id="popup1"></modal-popup>
- --}}        </div>
-
         <div id="bottle1-container">
             <div id='bottle1' class="progress1" v-on:click="infoChart(1)"></div>
         </div>
@@ -42,6 +37,12 @@
             <div class="columns">
                 <div class="column" id="map-col">
                     <div id='map' style='width: 1200px; height: 800px;'></div>
+                    <div id="gate-popups">
+                        <modal-popup gate="1" id="popup1" ref="popup1"></modal-popup>  
+                        <modal-popup gate="2" id="popup2" ref="popup2"></modal-popup>
+                        <modal-popup gate="3" id="popup3" ref="popup3"></modal-popup>
+                        <modal-popup gate="4" id="popup4" ref="popup4"></modal-popup>
+                    </div>
                 </div>
                 <div class="column">
                 </div>
@@ -49,7 +50,8 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js'></script>
+       {{--  <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js'></script> --}}
+        <script src="https://d3js.org/d3.v5.min.js"></script>
         <script type="text/javascript">
 
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNxdWFyZTk1IiwiYSI6ImNpeTJlazJyYjAwMXIzM21ucXNyZGt4eTMifQ.KlTGrUh9ptARSYnCUmhWow';
@@ -64,19 +66,13 @@
 
             var coords  = [[101.688478, 2.908532],[101.682815, 2.926047],[101.674933, 2.914450],[101.674616, 2.899531]];
 
-            gates.forEach(function(gate, i){
-                var marker = new mapboxgl.Marker(document.getElementById(gate))
-                  .setLngLat(coords[i])
-                  .addTo(map);
-            });
-
             function moveProgressBar(progId, state, level, id){
 
                 var states = ['started', 'inProgress', 'completed'],
                     segmentWidth = 100,
                     currentState = 'started';
 
-                var colorScale = d3.scale.ordinal()
+                var colorScale = d3.scaleOrdinal()
                     .domain(states)
                     .range(['yellow', 'orange', 'green']);
                 var progs = d3.select(progId);
@@ -131,7 +127,7 @@
                             segmentWidth = 100,
                             currentState = 'started';
 
-                        var colorScale = d3.scale.ordinal()
+                        var colorScale = d3.scaleOrdinal()
                             .domain(states)
                             .range(['yellow', 'orange', 'green']);
 
@@ -172,19 +168,25 @@
                     },
 
                     infoChart: function() {
-                        console.log("clicked!");
                         var id = i + 1;
+                        var popupId = "popup"+id;
                         var vm = this;
                         var level = axios.get('{{ url('/') }}/api/info/'+id)
                         .then(function(data) {
-                            console.log(data.data);
                             vm.info = data.data;
                         });
+                        document.getElementById(popupId).className += ' is-active';
                         // return level;
                     }
 
                   }
                 });
+            });
+
+            gates.forEach(function(gate, i){
+                var marker = new mapboxgl.Marker(document.getElementById(gate))
+                  .setLngLat(coords[i])
+                  .addTo(map);
             });
 
             // Define a new component called button-counter
@@ -194,88 +196,52 @@
                 var vm = this;
                 var info = axios.get('{{ url('/') }}/api/info/'+ vm.gate)
                 .then(function(data) {
-                    vm.info = data.data
+                    vm.info = data.data;
+                    vm.meterId = "halfCircle" + vm.gate;
                 });
                 return {
                   info: '',
-                  active: false
+                  active: false,
+                  'meterId': ''
                 }
               },
               created: function() {
-
+                this.d3create();
               },
+
+              // mounted: function () {
+              //   var vm = this;
+              //   this.$on("newdata", function(newData, id) {
+              //       console.log("newdata>>>", newData);
+              //   });
+              // },
 
               methods:{
+
+                    closeModal: function(id) {
+                        document.getElementById(id).classList.remove("is-active");
+                    },
                     d3create: function() {
                         var vm = this;
-                        var gateId
-                        var width = 330,
-                            height = 250,
-                            twoPi = 2 * Math.PI; 
-
-                        var dataset = {
-                                          progress: 35,
-                                          total: 46
-                                      };
-                         
-                        var arc = d3.svg.arc()
-                            .innerRadius(170)
-                            .outerRadius(220)
-                            .startAngle(0);
-                         
-                        var svg = d3.select(vm.id).append("svg")
-                            .attr("width", width)
-                            .attr("height", height)
-                          .append("g")
-                            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-
-                        var meter = svg.append("g")
-                            .attr("class", "season-progress");
-                         
-                        var background = meter.append("path")
-                            .datum({endAngle: twoPi})
-                            .style("fill", "#ddd")
-                            .attr("d", arc);
-                         
-                        var foreground = meter.append("path")
-                            .datum({endAngle:0})
-                            .style("fill", "orange")
-                            .attr("class", "foreground")
-                            .attr("d", arc);
-                         
-                          foreground.transition()
-                            .duration(1000)
-                            .ease("linear")
-                            .attrTween("d", function(d) {
-                                       var interpolate = d3.interpolate(d.endAngle, twoPi * dataset["progress"] / dataset["total"])
-                                       return function(t) {
-                                          d.endAngle = interpolate(t);
-                                          return arc(d);
-                                       }  
-                                    });
-
-                          var text =  meter.append("text")
-                            .attr("text-anchor", "middle")
-                            .attr("dy", ".35em")
-                            .attr("font-size", "24")
-                            .text(dataset["progress"]);
+                        var gateId = "#halfCircle" + vm.gate;
+                        console.log("gateId>>>", gateId);
                     }
-              },
+             },
 
-              template: `<div class="modal" v-bind:class="{'is-active': active != 'false'}">
+              template: `<div class="modal" v-bind:id="id">
                               <div class="modal-background"></div>
                               <div class="modal-card">
                                 <header class="modal-card-head">
                                   <p class="modal-card-title">Modal title</p>
-                                  <button class="delete" aria-label="close"></button>
+                                  <button class="delete" aria-label="close" v-on:click="closeModal(id)"></button>
                                 </header>
                                 <section class="modal-card-body">
                                     <div class="columns">
                                         <div class="column">
-                                            <div id="halfCircle@{{ info.id }}"></div>
+                                            <div v-bind:id="meterId"></div>
                                         </div>
                                         <div class="column">
-                                            <div id="lineChart@{{ info.id }}"></div>
+                                            <div></div>
                                         </div>
                                     </div>
                                   @{{ info.id }}
@@ -290,13 +256,22 @@
                          </div>`
             });
 
-            new Vue({ el: '#components-demo' });
-
             var socket = io('http://localhost:6001');
+
+            var gate_popups = new Vue({ el: '#gate-popups' });
 
             socket.on('test-channel:App\\Events\\WaterLevelChanged', function(data) {
                var id = data.gate.id;
                window['bottle'+id].water_level = data.gate.water_level;
+               if ( id == 1 ) {
+                 window["gate_popups"].$refs.popup1.info = data.gate;
+               } else if (id == 2){
+                 window["gate_popups"].$refs.popup2.info = data.gate;
+               } else if (id == 3){
+                 window["gate_popups"].$refs.popup3.info = data.gate;
+               } else {
+                 window["gate_popups"].$refs.popup4.info = data.gate;
+               } 
                var progId = "#prog"+id;
                 if (data.gate.water_level <= 40) {
                     moveProgressBar(progId, 'started', data.gate.water_level, id);

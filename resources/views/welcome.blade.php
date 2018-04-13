@@ -15,6 +15,37 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
         <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <style>
+            .axis {
+                font-family: sans-serif;
+                fill: #d35400;
+                font-size: 12px;
+            }
+            .line {
+                fill: none;
+                stroke: #f1c40f;
+                stroke-width: 3px;
+            }
+            .smoothline {
+                fill: none;
+                stroke: #e74c3c;
+                stroke-width: 3px;
+            }
+            .area {
+                fill: #e74c3c;
+                opacity: 0.5;
+            }
+            .circle {
+                stroke: #e74c3c;
+                stroke-width: 3px;
+                fill: #FFF;
+            }
+            .grid {
+                stroke: #DDD;
+                stroke-width: 1px;
+                fill: none;
+            }
+        </style>
     </head>
     <body>
         <div id="bottle1-container">
@@ -51,6 +82,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
        {{--  <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js'></script> --}}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script type="text/javascript">
 
@@ -176,6 +208,7 @@
                             vm.info = data.data;
                         });
                         document.getElementById(popupId).className += ' is-active';
+                        window['bottle'+id].$emit("active", id);
                         // return level;
                     }
 
@@ -197,34 +230,79 @@
                 var info = axios.get('{{ url('/') }}/api/info/'+ vm.gate)
                 .then(function(data) {
                     vm.info = data.data;
-                    vm.meterId = "halfCircle" + vm.gate;
+                    vm.lineChartId = "halfCircle" + vm.gate;
+                    vm.meterId = "meter" + vm.gate;
+                    vm.gate_opened = data.data.gate_opened == 1 ? "opened" : "closed"
                 });
                 return {
                   info: '',
                   active: false,
+                  'lineChartId': '',
+                  'gate_opened': '',
                   'meterId': ''
                 }
               },
               created: function() {
-                this.d3create();
+                // this.d3create();
               },
 
-              // mounted: function () {
-              //   var vm = this;
-              //   this.$on("newdata", function(newData, id) {
-              //       console.log("newdata>>>", newData);
-              //   });
-              // },
+              mounted: function() {
+                var vm = this;
+                window['bottle'+vm.gate].$on('active', function (id) {
+                  vm.d3create();
+                })
+              },
+
+              updated: function() {
+                    var vm = this;
+              },
 
               methods:{
+
+                    fetchData: function() {
+
+                    },
 
                     closeModal: function(id) {
                         document.getElementById(id).classList.remove("is-active");
                     },
                     d3create: function() {
                         var vm = this;
-                        var gateId = "#halfCircle" + vm.gate;
-                        console.log("gateId>>>", gateId);
+                        var gateId = "halfCircle" + vm.gate;
+                        var chartId = "#chart" + this.gate
+                        var modalId = "#"+this.id;
+                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":["1PM","2PM","3PM","4PM","5PM","6PM","7PM"],"datasets":[{"label":"Water Level","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
+                        
+                        var meter = document.getElementById(vm.meterId);
+
+                        var data = {
+                            labels: [
+                                "Water-Level",
+                                ""
+                            ],
+                            datasets: [
+                                {
+                                    data: [100, 0],
+                                    backgroundColor: [
+                                        "#FF6384",
+                                        "#999999"
+                                    ],
+                                    hoverBackgroundColor: [
+                                        "#FF6384",
+                                        "#999999"
+                                    ]
+                                }]
+                        };
+
+                        window["meterChart"+vm.gate] = new Chart(meter, {
+                            type: 'doughnut',
+                            data: data,
+                            options: {
+                                rotation: 1 * Math.PI,
+                              circumference: 1 * Math.PI
+                            }
+                        });
+
                     }
              },
 
@@ -232,25 +310,23 @@
                               <div class="modal-background"></div>
                               <div class="modal-card">
                                 <header class="modal-card-head">
-                                  <p class="modal-card-title">Modal title</p>
+                                  <p class="modal-card-title">Gate @{{ info.id }} Insight</p>
                                   <button class="delete" aria-label="close" v-on:click="closeModal(id)"></button>
                                 </header>
                                 <section class="modal-card-body">
+                                  Gate ID: @{{ info.id }} <br>
+                                  Gate Status: @{{ gate_opened }} <br>
+                                  Water Level: @{{ info.water_level }} <br>
                                     <div class="columns">
                                         <div class="column">
-                                            <div v-bind:id="meterId"></div>
+                                            <canvas v-bind:id="lineChartId"></canvas>
                                         </div>
                                         <div class="column">
-                                            <div></div>
+                                            <canvas v-bind:id="meterId"></canvas>
                                         </div>
                                     </div>
-                                  @{{ info.id }}
-                                  @{{ info.gate_open }}
-                                  @{{ info.water_level }}
                                 </section>
                                 <footer class="modal-card-foot">
-                                  <button class="button is-success">Save changes</button>
-                                  <button class="button">Cancel</button>
                                 </footer>
                               </div>
                          </div>`
@@ -260,17 +336,51 @@
 
             var gate_popups = new Vue({ el: '#gate-popups' });
 
+            function updateLine(id, data) {
+                var chart = window["chart_line"+id];
+                var date = new Date();
+                if (chart != undefined) {
+                    chart.data.labels.push(date.getSeconds()); 
+                    chart.data.labels.splice(0, 1); 
+                    chart.data.datasets.forEach((dataset, i) => {
+                        dataset.data.push(data);
+                        dataset.data.splice(0,1);
+                    });
+                    chart.update();
+                }
+            }
+
+            function updateMeter(id, data) {
+                var chart = window["meterChart"+id];
+                if (chart != undefined) {
+                    // chart.data.labels.push(date.getSeconds()); 
+                    // chart.data.labels.splice(0, 1); 
+                    chart.data.datasets.forEach((dataset, i) => {
+                        dataset.data.splice(0,2);
+                        dataset.data.push(data);
+                        dataset.data.push(100 - data);
+                    });
+                    chart.update();
+                }
+            }
+
+
+
             socket.on('test-channel:App\\Events\\WaterLevelChanged', function(data) {
                var id = data.gate.id;
                window['bottle'+id].water_level = data.gate.water_level;
                if ( id == 1 ) {
                  window["gate_popups"].$refs.popup1.info = data.gate;
+                 window["gate_popups"].$refs.popup1.gate_opened = data.gate.gate_open == 1 ? "opened" : "closed";
                } else if (id == 2){
                  window["gate_popups"].$refs.popup2.info = data.gate;
+                 window["gate_popups"].$refs.popup2.gate_opened = data.gate.gate_open == 1 ? "opened" : "closed";
                } else if (id == 3){
                  window["gate_popups"].$refs.popup3.info = data.gate;
+                 window["gate_popups"].$refs.popup3.gate_opened = data.gate.gate_open == 1 ? "opened" : "closed";
                } else {
                  window["gate_popups"].$refs.popup4.info = data.gate;
+                 window["gate_popups"].$refs.popup4.gate_opened = data.gate.gate_open == 1 ? "opened" : "closed";
                } 
                var progId = "#prog"+id;
                 if (data.gate.water_level <= 40) {
@@ -280,6 +390,9 @@
                 } else {
                     moveProgressBar(progId, 'completed', data.gate.water_level, id);
                 }
+
+                updateLine(id, data.gate.water_level);
+                updateMeter(id, data.gate.water_level);
             });
 
         </script>

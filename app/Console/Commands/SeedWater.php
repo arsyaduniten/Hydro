@@ -43,6 +43,11 @@ class SeedWater extends Command
         $gates = Gates::all();
         foreach ($gates as $gate) {
             $gate->water_level = rand(10, 100);
+            if ($gate->water_level > 50) {
+                $gate->gate_open = 0;
+            } else {
+                $gate->gate_open = 1;
+            }
             $gate->save();
             broadcast(new WaterLevelChanged($gate));
         }

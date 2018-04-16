@@ -332,7 +332,7 @@
                          </div>`
             });
 
-            var socket = io('http://hydro.azad.work:6001');
+            var socket = io();
 
             var gate_popups = new Vue({ el: '#gate-popups' });
 

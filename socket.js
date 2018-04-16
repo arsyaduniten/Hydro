@@ -1,5 +1,5 @@
 var server = require('http').Server();
-var io = require('socket.io').listen(server);
+var io = require('socket.io')(server);
 
 var Redis = require('ioredis');
 var redis = new Redis();
@@ -20,4 +20,4 @@ io.on('connection', function(socket){
   io.emit('user connected');
 });
 
-// server.listen(6001);
+server.listen(6001);

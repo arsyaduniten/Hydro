@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Laravel</title>
+        <title>NAFFWS</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -271,7 +271,7 @@
                         var gateId = "halfCircle" + vm.gate;
                         var chartId = "#chart" + this.gate
                         var modalId = "#"+this.id;
-                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":["1PM","2PM","3PM","4PM","5PM","6PM","7PM"],"datasets":[{"label":"Water Level","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
+                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":[],"datasets":[{"label":"Water Level","data":[],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
                         
                         var meter = document.getElementById(vm.meterId);
 

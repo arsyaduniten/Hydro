@@ -95,8 +95,8 @@
                         </a>
                     </p>
                     <a id="bottle1-btn" class="button mat-btn card-2 has-text-left">Gate 1: Tasik Putrajaya&nbsp;&nbsp;</a>
-                    <a id="bottle2-btn"  class="button mat-btn card-2 has-text-left">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                    <a id="bottle3-btn"  class="button mat-btn card-2 has-text-left">Gate 3: Sg. Chua&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle2-btn"  class="button mat-btn card-2 has-text-left">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle3-btn"  class="button mat-btn card-2 has-text-left">Gate 3: Sg. Chua&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                     <a id="bottle4-btn"  class="button mat-btn card-2 has-text-left">Gate 4: Sg. Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                 </div>
                 <div class="column" id="map-col">

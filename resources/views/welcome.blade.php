@@ -100,7 +100,7 @@
                     <a id="bottle4-btn"  class="button mat-btn card-2 has-text-left">Gate 4: Sg. Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                 </div>
                 <div class="column" id="map-col">
-                    <div class="card card-5" id='map' style='width: 1200px; height: 800px;'></div>
+                    <div class="card card-5" id='map' style='width: 800px; height: 400px;'></div>
                     <div id="gate-popups">
                         <modal-popup gate="1" id="popup1" ref="popup1"></modal-popup>  
                         <modal-popup gate="2" id="popup2" ref="popup2"></modal-popup>

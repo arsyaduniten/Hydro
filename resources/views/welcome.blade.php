@@ -95,9 +95,9 @@
                         </a>
                     </p>
                     <a id="bottle1-btn" class="button mat-btn card-2">Gate 1: Tasik Putrajaya</a>
-                    <a id="bottle2-btn"  class="button mat-btn card-2">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                    <a id="bottle3-btn"  class="button mat-btn card-2">Gate 3: Sg. Chua&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                    <a id="bottle4-btn"  class="button mat-btn card-2">Gate 4: Sg. Long&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle2-btn"  class="button mat-btn card-2">Gate 2: Sg. Ramal</a>
+                    <a id="bottle3-btn"  class="button mat-btn card-2">Gate 3: Sg. Chua</a>
+                    <a id="bottle4-btn"  class="button mat-btn card-2">Gate 4: Sg. Long</a>
                 </div>
                 <div class="column" id="map-col">
                     <div class="card card-5" id='map' style='width: 1200px; height: 800px;'></div>
@@ -193,6 +193,8 @@
 
                         var btnSvg = d3.select(btnId)
                             .append('svg')
+                            .attr('width', 30)
+                            .attr('height', 30)
 
                         var states = ['started', 'inProgress', 'completed'],
                             segmentWidth = 100,
@@ -237,7 +239,7 @@
 
                         var btn_circle = btnSvg.append("circle")
                             .attr("cx", 20)
-                            .attr("cy", 75)
+                            .attr("cy", 30)
                             .attr("id", btnCircleId)
                             .attr('fill', fill)
                             .attr("r", 5);

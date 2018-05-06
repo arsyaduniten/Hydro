@@ -12,7 +12,8 @@
         <!-- Styles -->  
         <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
         <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
         <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <style>
@@ -47,7 +48,19 @@
             }
         </style>
     </head>
-    <body>
+    <body style="background: #f5f5f5;">
+        <section class="hero is-bold">
+          <div class="hero-body">
+            <div class="container">
+              <h1 class="title">
+                IOT Hydro Gate
+              </h1>
+              <h2 class="subtitle">
+                Real Time Water Level Update
+              </h2>
+            </div>
+          </div>
+        </section>
         <div id="bottle1-container">
             <div id='bottle1' class="progress1" v-on:click="infoChart(1)"></div>
         </div>
@@ -64,18 +77,36 @@
             <div id='bottle4' class="progress1" v-on:click="infoChart(4)"></div>
         </div>
 
-      <div class="container">
+      <div class="container" style="margin-left: 30px;">
             <div class="columns">
+                <div class="column is-one-fifth" style="margin-top: 16px;">
+                    <p class="buttons">
+                        <a class="button is-success is-outlined has-text-weight-bold">
+                          <span class="icon is-medium">
+                            <i class="fas fa-angle-down"></i>
+                          </span>
+                          <span>Minimum</span>
+                        </a>
+                        <a class="button is-danger is-outlined has-text-weight-bold">
+                          <span class="icon is-medium">
+                            <i class="fas fa-angle-up"></i>
+                          </span>
+                          <span>Maximum</span>
+                        </a>
+                    </p>
+                    <a id="bottle1-btn" class="button mat-btn card-2">Gate 1: Tasik Putrajaya</a>
+                    <a id="bottle2-btn"  class="button mat-btn card-2">Gate 2: Sg. Ramal</a>
+                    <a id="bottle3-btn"  class="button mat-btn card-2">Gate 3: Sg. Chua</a>
+                    <a id="bottle4-btn"  class="button mat-btn card-2">Gate 4: Sg. Long</a>
+                </div>
                 <div class="column" id="map-col">
-                    <div id='map' style='width: 1200px; height: 800px;'></div>
+                    <div class="card card-5" id='map' style='width: 1200px; height: 800px;'></div>
                     <div id="gate-popups">
                         <modal-popup gate="1" id="popup1" ref="popup1"></modal-popup>  
                         <modal-popup gate="2" id="popup2" ref="popup2"></modal-popup>
                         <modal-popup gate="3" id="popup3" ref="popup3"></modal-popup>
                         <modal-popup gate="4" id="popup4" ref="popup4"></modal-popup>
                     </div>
-                </div>
-                <div class="column">
                 </div>
             </div>
         </div>
@@ -150,10 +181,14 @@
 
                    d3create: function(bottleId, progId) {
                         var vm = this;
+                        var btnId = bottleId + "-btn";
                         var svg = d3.select(bottleId)
                             .append('svg')
                             .attr('width', 20)
                             .attr('height', 100);
+
+                        var btnSvg = d3.select(btnId)
+                            .append('svg')
 
                         var states = ['started', 'inProgress', 'completed'],
                             segmentWidth = 100,
@@ -186,12 +221,18 @@
                                         .attr('y', 0);
 
                         var circleId = "bottle"+id+"-circle";
+                        var btnCircleId = "bottle"+id+"-circle-btn";
 
                         var fill = vm.water_level > 50 ? "#f43b47" : "#73C8A9";
                         var circle = svg.append("circle")
                             .attr("cx", 10)
                             .attr("cy", 10)
                             .attr("id", circleId)
+                            .attr('fill', fill)
+                            .attr("r", 5);
+
+                        var btn_circle = btnSvg.append("circle")
+                            .attr("id", btnCircleId)
                             .attr('fill', fill)
                             .attr("r", 5);
 

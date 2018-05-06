@@ -47,10 +47,15 @@ class SeedWater extends Command
             } else {
                 $operator = rand(0,1);
             }
+            $random = rand(1,10);
             if ($operator == 0) {
-                $gate->water_level += rand(1, 10);
+                $gate->water_level += $random;
             } else if ($operator == 1){
-                $gate->water_level -= rand(1, 10);
+                if ($gate->water_level -= $random < 0){
+                    $gate->water_level += $random;
+                } else {
+                    $gate->water_level -= $random;
+                }
             }
             if ($gate->water_level > 50) {
                 $gate->gate_open = 0;

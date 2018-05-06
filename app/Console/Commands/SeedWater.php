@@ -63,6 +63,12 @@ class SeedWater extends Command
             } else {
                 $gate->gate_open = 1;
             }
+
+            if ($gate->water_level > 100){
+                $gate->water_level += $random;
+            } else if ($gate->water_level < 0){
+                $gate->water_level += $random;
+            }
             $gate->save();
             broadcast(new WaterLevelChanged($gate));
         }

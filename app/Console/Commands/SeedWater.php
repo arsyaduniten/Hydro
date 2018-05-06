@@ -46,13 +46,13 @@ class SeedWater extends Command
             $random = rand(1,10);
             $level = $gate->water_level;
             if ($operator == 0) {
-                if ($level += $random >= 100){
+                if ($level + $random >= 100){
                     $gate->water_level -= $random;
                 } else {
                     $gate->water_level += $random;
                 }
             } else if ($operator == 1){
-                if ($level -= $random <= 0){
+                if ($level - $random <= 0){
                     $gate->water_level += $random;
                 } else {
                     $gate->water_level -= $random;
@@ -62,12 +62,6 @@ class SeedWater extends Command
                 $gate->gate_open = 0;
             } else {
                 $gate->gate_open = 1;
-            }
-
-            if ($gate->water_level > 100){
-                $gate->water_level += $random;
-            } else if ($gate->water_level < 0){
-                $gate->water_level += $random;
             }
             $gate->save();
             broadcast(new WaterLevelChanged($gate));

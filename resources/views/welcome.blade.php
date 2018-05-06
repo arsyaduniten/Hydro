@@ -233,7 +233,7 @@
 
                         var btn_circle = btnSvg.append("circle")
                             .attr("cx", 20)
-                            .attr("cy", 80)
+                            .attr("cy", 70)
                             .attr("id", btnCircleId)
                             .attr('fill', fill)
                             .attr("r", 5);

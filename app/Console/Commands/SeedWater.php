@@ -42,20 +42,17 @@ class SeedWater extends Command
         //
         $gates = Gates::all();
         foreach ($gates as $gate) {
-            if ($gate->water_level < 0){
-                $operator = 0;
-            } else {
-                $operator = rand(0,1);
-            }
+            $operator = rand(0,1);
             $random = rand(1,10);
+            $level = $gate->water_level;
             if ($operator == 0) {
-                if ($gate->water_level += $random > 100){
+                if ($level += $random > 100){
                     $gate->water_level -= $random;
                 } else {
                     $gate->water_level += $random;
                 }
             } else if ($operator == 1){
-                if ($gate->water_level -= $random < 0){
+                if ($level -= $random < 0){
                     $gate->water_level += $random;
                 } else {
                     $gate->water_level -= $random;

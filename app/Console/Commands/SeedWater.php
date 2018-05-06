@@ -52,7 +52,7 @@ class SeedWater extends Command
                     $gate->water_level += $random;
                 }
             } else if ($operator == 1){
-                if ($level -= $random < 0){
+                if ($level -= $random <= 0){
                     $gate->water_level += $random;
                 } else {
                     $gate->water_level -= $random;

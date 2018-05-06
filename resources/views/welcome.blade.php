@@ -79,7 +79,7 @@
 
       <div class="container" style="margin-left: 30px;">
             <div class="columns">
-                <div class="column is-one-fifth" style="margin-top: 16px;">
+                <div class="column is-one-quarter" style="margin-top: 16px;">
                     <p class="buttons">
                         <a class="button is-success is-outlined has-text-weight-bold">
                           <span class="icon is-medium">

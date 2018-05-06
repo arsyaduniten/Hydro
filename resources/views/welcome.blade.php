@@ -146,8 +146,12 @@
                         return 100 - level;
                     });
                 var fill = level > 50 ? "#f43b47" : "#73C8A9";
-                var circleId = "#bottle"+id+"-circle"
+                var circleId = "#bottle"+id+"-circle";
+                var btnCircleId = "#bottle"+id+"-circle-btn";
                 var circle = d3.select(circleId)
+                    .attr('fill', fill);
+
+                var circle_btn = d3.select(btnCircleId)
                     .attr('fill', fill);
             }
 

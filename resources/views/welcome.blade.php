@@ -58,6 +58,12 @@
               <h2 class="subtitle">
                 Real Time Water Level Update
               </h2>
+              <a class="button is-info is-outlined has-text-weight-bold" href="#map">
+                  <span class="icon is-medium">
+                    <i class="fas fa-angle-down"></i>
+                  </span>
+                  <span>Show Me</span>
+              </a>
             </div>
           </div>
         </section>

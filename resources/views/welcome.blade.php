@@ -100,10 +100,10 @@
                           <span>Maximum</span>
                         </a>
                     </p>
-                    <a id="bottle1-btn" class="button mat-btn card-2 has-text-left">Gate 1: Tasik Putrajaya&nbsp;&nbsp;</a>
-                    <a id="bottle2-btn"  class="button mat-btn card-2 has-text-left">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                    <a id="bottle3-btn"  class="button mat-btn card-2 has-text-left">Gate 3: Sg. Chua&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                    <a id="bottle4-btn"  class="button mat-btn card-2 has-text-left">Gate 4: Sg. Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle1-btn" data="bottle1" class="button mat-btn card-2 has-text-left">Gate 1: Tasik Putrajaya&nbsp;&nbsp;</a>
+                    <a id="bottle2-btn" data="bottle2"  class="button mat-btn card-2 has-text-left">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle3-btn" data="bottle3"  class="button mat-btn card-2 has-text-left">Gate 3: Sg. Chua&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle4-btn" data="bottle4"  class="button mat-btn card-2 has-text-left">Gate 4: Sg. Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                 </div>
                 <div class="column" id="map-col">
                     <div class="card card-5" id='map' style='width: 900px; height: 600px;'></div>
@@ -146,6 +146,10 @@
                     window.location.hash = hash;
                   });
                 } // End if
+              });
+
+              $(".mat-btn").on('click', function(event){
+
               });
             });
 
@@ -352,7 +356,7 @@
                         var gateId = "halfCircle" + vm.gate;
                         var chartId = "#chart" + this.gate
                         var modalId = "#"+this.id;
-                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":["1PM","2PM","3PM","4PM","5PM","6PM","7PM"],"datasets":[{"label":"Water Level","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
+                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":[],"datasets":[{"label":"Water Level","data":[],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
                         
                         var meter = document.getElementById(vm.meterId);
 
@@ -421,11 +425,17 @@
                 var chart = window["chart_line"+id];
                 var date = new Date();
                 if (chart != undefined) {
-                    chart.data.labels.push(date.getSeconds()); 
-                    chart.data.labels.splice(0, 1); 
+                    chart.data.labels.push(date.getSeconds());
+                    console.log("label>>>",chart.data.labels);
+                    if (chart.data.labels.length == 7) {
+                        chart.data.labels.splice(0, 1); 
+                    } 
                     chart.data.datasets.forEach((dataset, i) => {
                         dataset.data.push(data);
-                        dataset.data.splice(0,1);
+                        console.log("dataset>>>",dataset.data);
+                        if (dataset.data.length == 7) {
+                            dataset.data.splice(0,1);
+                        } 
                     });
                     chart.update();
                 }

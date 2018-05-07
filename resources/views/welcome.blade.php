@@ -50,7 +50,7 @@
     </head>
     <body style="background: #f5f5f5;">
         <section class="hero is-bold">
-          <div class="hero-body">
+          <div class="hero-body has-text-centered">
             <div class="container">
               <h1 class="title">
                 IOT Hydro Gate

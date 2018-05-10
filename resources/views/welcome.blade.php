@@ -11,7 +11,7 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
         <!-- Styles -->  
         <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
-        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet'/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
         <link rel="stylesheet" type="text/css" href="/css/style.css">
         <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
@@ -133,7 +133,7 @@
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/highcharts-more.js"></script>js
+        <script src="https://code.highcharts.com/highcharts-more.js"></script>
         <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
         <script type="text/javascript">
 
@@ -461,14 +461,14 @@
                                         </div>
                                         <div class="column">
                                             <gauge :id="meterId" :initial="info.water_level" :gate="gate"></gauge>
-                                            <a  v-if="gate_opened === 'opened'" v-on:click="gate_opened = 'closed'" class="button is-danger is-outlined has-text-weight-bold" style="margin-left:100px;">
+                                            <a  v-if="gate_opened === 'opened'" v-on:click="gate_opened = 'closed'" class="button is-danger is-outlined has-text-weight-bold" style="margin-left:85px;">
                                               <span class="icon is-medium">
                                                 <i class="fas fa-stop-circle"></i>
                                               </span>
                                               <span>Close Gate</span>
                                             </a>
 
-                                            <a v-else v-on:click="gate_opened = 'opened'" class="button is-success is-outlined has-text-weight-bold" style="margin-left:100px;">
+                                            <a v-else v-on:click="gate_opened = 'opened'" class="button is-success is-outlined has-text-weight-bold" style="margin-left:85px;">
                                               <span class="icon is-medium">
                                                 <i class="fab fa-codepen"></i>
                                               </span>

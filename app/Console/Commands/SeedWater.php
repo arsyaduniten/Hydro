@@ -66,8 +66,10 @@ class SeedWater extends Command
             $gate->save();
             $record = $gate->records;
             $records = $record->records;
-            if (count($records) >= 20) {
-                array_shift($records);
+            if (is_array($records)) {
+                if (count($records) >= 20) {
+                    array_shift($records);
+                }
             }
             array_push($records, $gate->water_level);
             $record->records = $records;

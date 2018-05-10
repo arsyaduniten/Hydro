@@ -8,11 +8,6 @@ class GateRecord extends Model
 {
     //
     protected $casts = [
-        'records' => 'array',
+        'records' => 'array'
     ];
-
-    public function gate()
-    {
-    	return $this->belongsTo('App\Gates');
-    }
 }

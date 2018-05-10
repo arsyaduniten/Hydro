@@ -95,7 +95,7 @@
 
       <div class="container" style="margin-left: 30px;">
             <div class="columns">
-                <div class="column is-one-third" style="margin-top: 16px;">
+                <div class="column is-one-third" style="margin-top: 16px; width: 24%">
                     <p class="buttons">
                         <a class="button is-success is-outlined has-text-weight-bold">
                           <span class="icon is-medium">

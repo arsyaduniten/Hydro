@@ -21,6 +21,12 @@
             .highcharts-yaxis-grid .highcharts-grid-line {
                 display: none;
             }
+
+            .chart-container{
+                width: 500px;
+                height: 300px;
+            }
+
             .axis {
                 font-family: sans-serif;
                 fill: #d35400;
@@ -104,10 +110,10 @@
                           <span>Maximum</span>
                         </a>
                     </p>
-                    <a id="bottle1-btn" data="bottle1" class="button mat-btn card-2 has-text-left">Gate 1: Tasik Putrajaya&nbsp;&nbsp;</a>
-                    <a id="bottle2-btn" data="bottle2"  class="button mat-btn card-2 has-text-left">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                    <a id="bottle3-btn" data="bottle3"  class="button mat-btn card-2 has-text-left">Gate 3: Sg. Chua&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                    <a id="bottle4-btn" data="bottle4"  class="button mat-btn card-2 has-text-left">Gate 4: Sg. Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle1-btn" data="bottle1" onclick="bounceMarker(1)" class="button mat-btn card-2 has-text-left">Gate 1: Tasik Putrajaya&nbsp;&nbsp;</a>
+                    <a id="bottle2-btn" data="bottle2" onclick="bounceMarker(2)"  class="button mat-btn card-2 has-text-left">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle3-btn" data="bottle3" onclick="bounceMarker(3)" class="button mat-btn card-2 has-text-left">Gate 3: Sg. Chua&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    <a id="bottle4-btn" data="bottle4" onclick="bounceMarker(4)"  class="button mat-btn card-2 has-text-left">Gate 4: Sg. Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                 </div>
                 <div class="column" id="map-col">
                     <div class="card card-5" id='map' style='width: 900px; height: 600px;'></div>
@@ -158,7 +164,7 @@
               $(".mat-btn").on('click', function(event){
 
               });
-            });
+            }); 
 
             mapboxgl.accessToken = 'pk.eyJ1IjoiYXNxdWFyZTk1IiwiYSI6ImNpeTJlazJyYjAwMXIzM21ucXNyZGt4eTMifQ.KlTGrUh9ptARSYnCUmhWow';
             var map = new mapboxgl.Map({
@@ -309,10 +315,27 @@
             });
 
             gates.forEach(function(gate, i){
-                var marker = new mapboxgl.Marker(document.getElementById(gate))
+                var markerId = i + 1;
+                console.log(markerId);
+                window['marker'+markerId] = new mapboxgl.Marker(document.getElementById(gate))
                   .setLngLat(coords[i])
                   .addTo(map);
             });
+
+            function bounceMarker(markerId){
+                var circleId = "bottle"+markerId+"-circle"
+                // var marker = window["marker"+markerId];
+                // var oldLat = marker.getLngLat().lat;
+                // var oldLng = marker.getLngLat().lng;
+                // var newLat = marker.getLngLat().lat + 0.000493;
+                // var newLng = marker.getLngLat().lng + 0.000028;
+                // marker.setOffset([-400, 0]);
+                // setTimeout(function(){ marker.setOffset([0, 0]); }, 1500);
+                // marker.setOffset([newLng, newLat]);
+                // setTimeout(function(){ marker.setLngLat([oldLng, oldLat]); }, 1500);
+                // marker.setOffset([newLng, newLat]);
+                // setTimeout(function(){ marker.setLngLat([oldLng, oldLat]); }, 1500);
+            }  
 
             // Define a new component called button-counter
             Vue.component('modal-popup', {
@@ -322,7 +345,7 @@
                 var info = axios.get('{{ url('/') }}/api/info/'+ vm.gate)
                 .then(function(data) {
                     vm.info = data.data;
-                    vm.lineChartId = "halfCircle" + vm.gate;
+                    vm.lineChartId = "lineChart" + vm.gate;
                     vm.meterId = "meter" + vm.gate;
                     vm.gate_opened = data.data.gate_opened == 1 ? "opened" : "closed";
                 });
@@ -360,7 +383,7 @@
                     },
                     d3create: function() {
                         var vm = this;
-                        var gateId = "halfCircle" + vm.gate;
+                        var gateId = "lineChart" + vm.gate;
                         var chartId = "#chart" + this.gate
                         var modalId = "#"+this.id;
                         window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":[],"datasets":[{"label":"Water Level","data":[],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
@@ -385,7 +408,9 @@
                                   Water Level: @{{ info.water_level }} <br>
                                     <div class="columns">
                                         <div class="column">
-                                            <canvas v-bind:id="lineChartId" style="width: 500px; height: 300px;"></canvas>
+                                            <div class="chart-container">
+                                                <canvas v-bind:id="lineChartId" style="width: 500px; height: 300px;"></canvas>
+                                            </div>
                                         </div>
                                         <div class="column">
                                             <gauge :id="meterId" :initial="info.water_level" :gate="gate"></gauge>
@@ -541,7 +566,7 @@
                 var chart = window["chart_line"+id];
                 var date = new Date();
                 if (chart != undefined) {
-                    chart.data.labels.push(date.getSeconds());
+                    chart.data.labels.push(date.toLocaleTimeString());
                     if (chart.data.labels.length == 20) {
                         chart.data.labels.splice(0, 1); 
                     } 

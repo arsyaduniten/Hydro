@@ -461,14 +461,14 @@
                                         </div>
                                         <div class="column">
                                             <gauge :id="meterId" :initial="info.water_level" :gate="gate"></gauge>
-                                            <a  v-if="gate_opened === 'opened'" v-on:click="gate_opened = 'closed'" class="button is-danger is-outlined has-text-weight-bold" style="margin-left:120px;">
+                                            <a  v-if="gate_opened === 'opened'" v-on:click="gate_opened = 'closed'" class="button is-danger is-outlined has-text-weight-bold" style="margin-left:100px;">
                                               <span class="icon is-medium">
                                                 <i class="fas fa-stop-circle"></i>
                                               </span>
                                               <span>Close Gate</span>
                                             </a>
 
-                                            <a v-else v-on:click="gate_opened = 'opened'" class="button is-success is-outlined has-text-weight-bold" style="margin-left:120px;">
+                                            <a v-else v-on:click="gate_opened = 'opened'" class="button is-success is-outlined has-text-weight-bold" style="margin-left:100px;">
                                               <span class="icon is-medium">
                                                 <i class="fab fa-codepen"></i>
                                               </span>

@@ -17,6 +17,10 @@
         <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <style>
+
+            .highcharts-yaxis-grid .highcharts-grid-line {
+                display: none;
+            }
             .axis {
                 font-family: sans-serif;
                 fill: #d35400;
@@ -122,6 +126,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/highcharts-more.js"></script>js
+        <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
         <script type="text/javascript">
 
             $(document).ready(function(){
@@ -317,7 +324,7 @@
                     vm.info = data.data;
                     vm.lineChartId = "halfCircle" + vm.gate;
                     vm.meterId = "meter" + vm.gate;
-                    vm.gate_opened = data.data.gate_opened == 1 ? "opened" : "closed"
+                    vm.gate_opened = data.data.gate_opened == 1 ? "opened" : "closed";
                 });
                 return {
                   info: '',
@@ -357,43 +364,12 @@
                         var chartId = "#chart" + this.gate
                         var modalId = "#"+this.id;
                         window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":[],"datasets":[{"label":"Water Level","data":[],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
-                        
-                        var meter = document.getElementById(vm.meterId);
-
-                        var data = {
-                            labels: [
-                                "Water-Level",
-                                ""
-                            ],
-                            datasets: [
-                                {
-                                    data: [100, 0],
-                                    backgroundColor: [
-                                        "#FF6384",
-                                        "#999999"
-                                    ],
-                                    hoverBackgroundColor: [
-                                        "#FF6384",
-                                        "#999999"
-                                    ]
-                                }]
-                        };
-
-                        window["meterChart"+vm.gate] = new Chart(meter, {
-                            type: 'doughnut',
-                            data: data,
-                            options: {
-                                rotation: 1 * Math.PI,
-                              circumference: 1 * Math.PI
-                            }
-                        });
-
                     }
              },
 
               template: `<div class="modal" v-bind:id="id">
                               <div class="modal-background"></div>
-                              <div class="modal-card">
+                              <div class="modal-card" style="width: 80%;">
                                 <header class="modal-card-head">
                                   <p class="modal-card-title">Gate @{{ info.id }} Insight</p>
                                   <button class="delete" aria-label="close" v-on:click="closeModal(id)"></button>
@@ -403,11 +379,17 @@
                                   Gate Status: @{{ gate_opened }} <br>
                                   Water Level: @{{ info.water_level }} <br>
                                     <div class="columns">
-                                        <div class="column">
-                                            <canvas v-bind:id="lineChartId"></canvas>
+                                        <div class="column is-paddingless is-marginless">
+                                            <canvas v-bind:id="lineChartId" style="width: 500px; height: 300px;"></canvas>
                                         </div>
                                         <div class="column">
-                                            <canvas v-bind:id="meterId"></canvas>
+                                            <gauge :id="meterId" :initial="info.water_level" :gate="gate"></gauge>
+                                            <a class="button is-danger is-outlined has-text-weight-bold" style="margin-left:130px;">
+                                              <span class="icon is-medium">
+                                                <i class="fas fa-stop-circle"></i>
+                                              </span>
+                                              <span>Close Gate</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </section>
@@ -415,6 +397,127 @@
                                 </footer>
                               </div>
                          </div>`
+            });
+
+            Vue.component('gauge',{
+                props:['id', 'initial', 'gate'],
+                data: function() {
+                    var vm = this;
+                    var info = axios.get('{{ url('/') }}/api/info/'+ vm.gate)
+                    .then(function(data) {
+                        vm.data = data.data;
+                        vm.water_level = data.data.water_level;
+                    });
+                    return {
+                        'data': '',
+                        'water_level': ''
+                    }
+                },
+
+                created: function(){
+
+                },
+
+                mounted: function(){
+                    var vm = this;
+                    window['bottle'+vm.gate].$on('active', function (id) {
+                      vm.d3create();
+                    })
+                },
+
+                methods:{
+                    d3create: function(){
+                        var vm = this;
+                        var gaugeOptions = {
+
+                            chart: {
+                                type: 'solidgauge'
+                            },
+
+                            title: null,
+
+                            pane: {
+                                center: ['50%', '85%'],
+                                size: '140%',
+                                startAngle: -90,
+                                endAngle: 90,
+                                background: {
+                                    backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+                                    innerRadius: '60%',
+                                    outerRadius: '100%',
+                                    shape: 'arc'
+                                }
+                            },
+
+                            tooltip: {
+                                enabled: false
+                            },
+
+                            // the value axis
+                            yAxis: {
+                                stops: [
+                                    [0.1, '#55BF3B'], // green
+                                    [0.5, '#DDDF0D'], // yellow
+                                    [0.9, '#DF5353'] // red
+                                ],
+                                lineWidth: 0,
+                                minorTickInterval: null,
+                                tickAmount: 2,
+                                title: {
+                                    y: -70
+                                },
+                                labels: {
+                                    y: 16
+                                }
+                            },
+
+                            plotOptions: {
+                                solidgauge: {
+                                    dataLabels: {
+                                        y: 5,
+                                        borderWidth: 0,
+                                        useHTML: true
+                                    }
+                                }
+                            }
+                        };
+
+                        // The speed gauge
+                        // console.log("water_pie"+this.gate);
+                        window["water_pie"+this.gate] = Highcharts.chart(vm.id, Highcharts.merge(gaugeOptions, {
+                            yAxis: {
+                                min: 0,
+                                max: 100,
+                                title: {
+                                    text: 'Water Level'
+                                }
+                            },
+
+                            credits: {
+                                enabled: false
+                            },
+
+                            series: [{
+                                name: 'Water Level',
+                                data: [vm.initial],
+                                dataLabels: {
+                                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                                           '<span style="font-size:12px;color:silver">litre</span></div>'
+                                },
+                                tooltip: {
+                                    valueSuffix: 'litre'
+                                }
+                            }]
+
+                        }));
+                    }
+                },
+
+                template: `<div style="width: 400px; height: 200px; margin: 0 auto">
+                             <div v-bind:id="id" style="width: 300px; height: 200px;"></div>
+                           </div>`
+
             });
 
             var socket = io('http://hydro.azad.work:6001');
@@ -426,14 +529,12 @@
                 var date = new Date();
                 if (chart != undefined) {
                     chart.data.labels.push(date.getSeconds());
-                    console.log("label>>>",chart.data.labels);
-                    if (chart.data.labels.length == 7) {
+                    if (chart.data.labels.length == 20) {
                         chart.data.labels.splice(0, 1); 
                     } 
                     chart.data.datasets.forEach((dataset, i) => {
                         dataset.data.push(data);
-                        console.log("dataset>>>",dataset.data);
-                        if (dataset.data.length == 7) {
+                        if (dataset.data.length == 20) {
                             dataset.data.splice(0,1);
                         } 
                     });
@@ -442,16 +543,14 @@
             }
 
             function updateMeter(id, data) {
-                var chart = window["meterChart"+id];
-                if (chart != undefined) {
-                    // chart.data.labels.push(date.getSeconds()); 
-                    // chart.data.labels.splice(0, 1); 
-                    chart.data.datasets.forEach((dataset, i) => {
-                        dataset.data.splice(0,2);
-                        dataset.data.push(data);
-                        dataset.data.push(100 - data);
-                    });
-                    chart.update();
+                try{
+                    window["water_pie"+id].series[0].update({
+                        pointStart: 0,
+                        data: [data,]
+                    }, true); //true / false to redraw
+
+                }catch(e){
+
                 }
             }
 

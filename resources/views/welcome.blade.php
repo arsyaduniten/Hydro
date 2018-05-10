@@ -424,7 +424,16 @@
                             labels.push(date.toLocaleTimeString());
                             count++;
                         }
-                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":labels,"datasets":[{"label":"Water Level","data":vm.records,"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
+                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":labels,"datasets":[{"label":"Water Level","data":vm.records,"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{
+                            scales: {
+                                yAxes: [{
+                                  scaleLabel: {
+                                    display: true,
+                                    labelString: 'Water Level'
+                                  }
+                                }]
+                              } 
+                        }});
                     }
              },
 

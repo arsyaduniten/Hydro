@@ -95,7 +95,7 @@
 
       <div class="container" style="margin-left: 30px;">
             <div class="columns">
-                <div class="column is-one-quarter" style="margin-top: 16px;">
+                <div class="column is-one-third" style="margin-top: 16px;">
                     <p class="buttons">
                         <a class="button is-success is-outlined has-text-weight-bold">
                           <span class="icon is-medium">
@@ -439,7 +439,7 @@
 
               template: `<div class="modal" v-bind:id="id">
                               <div class="modal-background"></div>
-                              <div class="modal-card" style="width: 80%;">
+                              <div class="modal-card" style="width: 90%;">
                                 <header class="modal-card-head">
                                   <p class="modal-card-title" style="line-height:inherit;"> 
                                   <a v-if="gate_opened === 'opened'" class="button is-success">@{{ gate_opened }}</a>
@@ -456,7 +456,7 @@
                                     <div class="columns">
                                         <div class="column">
                                             <div class="chart-container">
-                                                <canvas v-bind:id="lineChartId" style="width: 500px; height: 300px;"></canvas>
+                                                <canvas v-bind:id="lineChartId" style="width: 450px; height: 300px;"></canvas>
                                             </div>
                                         </div>
                                         <div class="column">

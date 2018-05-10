@@ -457,6 +457,7 @@
                                     backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
                                     innerRadius: '60%',
                                     outerRadius: '100%',
+                                    borderWidth: 0,
                                     shape: 'arc'
                                 }
                             },

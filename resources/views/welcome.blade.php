@@ -371,24 +371,36 @@
                               <div class="modal-background"></div>
                               <div class="modal-card" style="width: 80%;">
                                 <header class="modal-card-head">
-                                  <p class="modal-card-title">Gate @{{ info.id }} Insight</p>
+                                  <p class="modal-card-title" style="line-height:inherit;"> 
+                                  <a v-if="gate_opened === 'opened'" class="button is-success">@{{ gate_opened }}</a>
+                                  <a v-else class="button is-danger">@{{ gate_opened }}</a>
+                                  &nbsp;&nbsp;Gate @{{ info.id }} Insight
+                                  </p>
+                                  <!--<p class="modal-card-title has-text-centered" style="line-height:inherit;"></p>-->
+                                  <br>
                                   <button class="delete" aria-label="close" v-on:click="closeModal(id)"></button>
                                 </header>
                                 <section class="modal-card-body">
                                   Gate ID: @{{ info.id }} <br>
-                                  Gate Status: @{{ gate_opened }} <br>
                                   Water Level: @{{ info.water_level }} <br>
                                     <div class="columns">
-                                        <div class="column is-paddingless is-marginless">
+                                        <div class="column">
                                             <canvas v-bind:id="lineChartId" style="width: 500px; height: 300px;"></canvas>
                                         </div>
                                         <div class="column">
                                             <gauge :id="meterId" :initial="info.water_level" :gate="gate"></gauge>
-                                            <a class="button is-danger is-outlined has-text-weight-bold" style="margin-left:130px;">
+                                            <a  v-if="gate_opened === 'opened'" v-on:click="gate_opened = 'closed'" class="button is-danger is-outlined has-text-weight-bold" style="margin-left:120px;">
                                               <span class="icon is-medium">
                                                 <i class="fas fa-stop-circle"></i>
                                               </span>
                                               <span>Close Gate</span>
+                                            </a>
+
+                                            <a v-else v-on:click="gate_opened = 'opened'" class="button is-success is-outlined has-text-weight-bold" style="margin-left:120px;">
+                                              <span class="icon is-medium">
+                                                <i class="fab fa-codepen"></i>
+                                              </span>
+                                              <span>Open Gate</span>
                                             </a>
                                         </div>
                                     </div>

@@ -97,18 +97,18 @@
             <div class="columns">
                 <div class="column is-one-third" style="margin-top: 16px; width: 29%">
                     <p class="buttons">
-                        <a class="button is-success is-outlined has-text-weight-bold">
+                        <button class="button is-success is-outlined has-text-weight-bold" onclick="getMaxMin('min')">
                           <span class="icon is-medium">
                             <i class="fas fa-angle-down"></i>
                           </span>
                           <span>Minimum</span>
-                        </a>
-                        <a class="button is-danger is-outlined has-text-weight-bold">
+                        </button>
+                        <button class="button is-danger is-outlined has-text-weight-bold" onclick="getMaxMin('max')">
                           <span class="icon is-medium">
                             <i class="fas fa-angle-up"></i>
                           </span>
                           <span>Maximum</span>
-                        </a>
+                        </button>
                     </p>
                     <a id="bottle1-btn" data="bottle1" onclick="bounceMarker(1)" class="button mat-btn card-2 has-text-left">Gate 1: Tasik Putrajaya&nbsp;&nbsp;</a>
                     <a id="bottle2-btn" data="bottle2" onclick="bounceMarker(2)"  class="button mat-btn card-2 has-text-left">Gate 2: Sg. Ramal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
@@ -639,6 +639,20 @@
                 }
             }
 
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            function getMaxMin(token){
+                var endpoint = '{{ url('/') }}/api/minmax/'+token;
+                console.log("endpoint>>>", endpoint);
+                $.get(endpoint, function (data) {
+                    console.log(data);
+                    bounceMarker(data);
+                });
+            }
 
 
             socket.on('test-channel:App\\Events\\WaterLevelChanged', function(data) {

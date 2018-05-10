@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Gates;
+use App\GateRecord;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,4 +24,8 @@ Route::get("/level/{gate}", function (Gates $gate) {
 
 Route::get("/info/{gate}", function (Gates $gate) {
     return $gate;
+});
+
+Route::get("/records/{gaterecord}", function (GateRecord $gaterecord) {
+    return $gaterecord->records;
 });

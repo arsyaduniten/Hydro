@@ -370,12 +370,20 @@
                     vm.meterId = "meter" + vm.gate;
                     vm.gate_opened = data.data.gate_opened == 1 ? "opened" : "closed";
                 });
+
+                var records = axios.get('{{ url('/') }}/api/records/'+ vm.gate)
+                .then(function(data) {
+                    vm.records = data.data;
+                });
+
+
                 return {
                   info: '',
                   active: false,
                   'lineChartId': '',
                   'gate_opened': '',
-                  'meterId': ''
+                  'meterId': '',
+                  'records': ''
                 }
               },
               created: function() {
@@ -407,7 +415,16 @@
                         var gateId = "lineChart" + vm.gate;
                         var chartId = "#chart" + this.gate
                         var modalId = "#"+this.id;
-                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":[],"datasets":[{"label":"Water Level","data":[],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
+                        var labels = [];
+                        var count = 0,
+                            milliseconds = 0;
+                        while(count < 20){
+                            milliseconds += 3000;
+                            var date = new Date(Date.now() - milliseconds);
+                            labels.push(date.toLocaleTimeString());
+                            count++;
+                        }
+                        window["chart_line"+vm.gate] = new Chart(document.getElementById(gateId),{"type":"line","data":{"labels":labels,"datasets":[{"label":"Water Level","data":vm.records,"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});
                     }
              },
 

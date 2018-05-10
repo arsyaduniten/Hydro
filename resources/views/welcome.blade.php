@@ -63,7 +63,7 @@
           <div class="hero-body has-text-centered">
             <div class="container">
               <h1 class="title">
-                IOT Hydro Gate
+                IoT Hydro Gate
               </h1>
               <h2 class="subtitle">
                 Real Time Water Level Update
@@ -218,7 +218,7 @@
                    var gateId = "#bottle"+id;
                    var vm = this;
                    var level = vm.fetchData();
-                   level.then(data => {vm.d3create(gateId, progId, data)});
+                   level.then(data => {vm.d3create(gateId, progId, id)});
                   },
 
                   methods: {
@@ -232,12 +232,14 @@
                     return level;
                    },
 
-                   d3create: function(bottleId, progId) {
+                   d3create: function(bottleId, progId, id) {
                         var vm = this;
                         var btnId = bottleId + "-btn";
+                        var svgId = "svgProgress"+id
                         var svg = d3.select(bottleId)
                             .append('svg')
                             .attr('width', 20)
+                            .attr('id', svgId)
                             .attr('height', 100);
 
                         var btnSvg = d3.select(btnId)
@@ -323,19 +325,38 @@
             });
 
             function bounceMarker(markerId){
-                var circleId = "bottle"+markerId+"-circle"
-                // var marker = window["marker"+markerId];
-                // var oldLat = marker.getLngLat().lat;
-                // var oldLng = marker.getLngLat().lng;
-                // var newLat = marker.getLngLat().lat + 0.000493;
-                // var newLng = marker.getLngLat().lng + 0.000028;
-                // marker.setOffset([-400, 0]);
-                // setTimeout(function(){ marker.setOffset([0, 0]); }, 1500);
-                // marker.setOffset([newLng, newLat]);
-                // setTimeout(function(){ marker.setLngLat([oldLng, oldLat]); }, 1500);
-                // marker.setOffset([newLng, newLat]);
-                // setTimeout(function(){ marker.setLngLat([oldLng, oldLat]); }, 1500);
+                var circleId = "#svgProgress"+markerId;
+                d3.select(circleId).transition()
+                      .duration(10000)
+                      .attrTween("transform", function() { return d3.interpolateString("rotate(0)", "rotate(720)"); });
             }  
+
+             function pulsate(selection) {
+                recursive_transitions();
+
+                function recursive_transitions() {
+                    selection.transition()
+                        .duration(400)
+                        .attr("stroke-width", 2)
+                        .attr("r", 8)
+                        .ease(d3.easeSinIn)
+                        .transition()
+                        .duration(800)
+                        .attr('stroke-width', 3)
+                        .attr("r", 12)
+                        .ease(d3.easeBounceIn)
+                        .on("end", recursive_transitions);
+
+                    // transition back to normal
+                    setTimeout(function(){
+                        selection.transition()
+                        .duration(200)
+                        .attr("r", 5)
+                        .attr("stroke-width", 2)
+                        .attr("stroke-dasharray", "1, 0");
+                    }, 4000);          
+                }
+            }
 
             // Define a new component called button-counter
             Vue.component('modal-popup', {

@@ -59,24 +59,6 @@
         </style>
     </head>
     <body style="background: #f5f5f5;">
-        <section class="hero is-bold">
-          <div class="hero-body has-text-centered">
-            <div class="container">
-              <h1 class="title">
-                IoT Hydro Gate
-              </h1>
-              <h2 class="subtitle">
-                Real Time Water Level Update
-              </h2>
-              <a class="button is-info is-outlined has-text-weight-bold" href="#map" id="show-me">
-                  <span class="icon is-medium">
-                    <i class="fas fa-angle-down"></i>
-                  </span>
-                  <span>Show Me</span>
-              </a>
-            </div>
-          </div>
-        </section>
         <div id="bottle1-container">
             <div id='bottle1' class="progress1" v-on:click="infoChart(1)"></div>
         </div>
@@ -96,6 +78,24 @@
       <div class="container" style="margin-left: 30px;">
             <div class="columns">
                 <div class="column is-one-third" style="margin-top: 16px; width: 29%">
+                    <section class="hero is-bold">
+                      <div class="hero-body">
+                        <div class="container">
+                          <h1 class="title">
+                            IoT Hydro Gate
+                          </h1>
+                          <h2 class="subtitle">
+                            Real Time <br>Water Level Update
+                          </h2>
+                          <!-- <a class="button is-info is-outlined has-text-weight-bold" href="#map" id="show-me">
+                              <span class="icon is-medium">
+                                <i class="fas fa-angle-down"></i>
+                              </span>
+                              <span>Show Me</span>
+                          </a> -->
+                        </div>
+                      </div>
+                    </section>
                     <p class="buttons">
                         <button class="button is-success is-outlined has-text-weight-bold" onclick="getMaxMin('min')">
                           <span class="icon is-medium">
